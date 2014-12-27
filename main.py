@@ -2,6 +2,14 @@
 from Tkinter import *
 import random
 from string import *
+from wordnik import *
+
+#api stuff for wordnik
+apiUrl = 'http://api.wordnik.com/v4'
+apiKey = '1024c7f51c4e5c12f230908f5cd087f83ebc58899eba5af45'
+client = None
+wordApi = None
+
 
 words = []
 attempts = 0
@@ -93,17 +101,18 @@ class MainWindow(Frame):
 			Label(self.parent,text="You Win!").pack()
 			for i in range(0,26):
 				self.Alphabets[i]['state'] = DISABLED
-
+		
+		#draw
 		if(fail):
 			self.HangHim()
-			#call draw
+			
 
 		print(str(corrects)+' '+str(attempts))
 
 
 
 	def HangHim(self):
-		global attempts
+		global attempts,wordApi
 		attempts += 1
 
 		if(attempts == 1):
@@ -123,6 +132,8 @@ class MainWindow(Frame):
 		
 		if(attempts == 5):			
 			self.canvas.create_line(250,120,270,130)
+			definition = wordApi.getDefinitions(self.GuessWord.lower(),sourceDictionaries='wiktionary',limit = 1)
+			Label(self.parent,text = definition[0].text,wraplength=1000,justify=LEFT).pack()
 
 		if(attempts == 6):
 			self.canvas.create_line(250,160,230,170)
@@ -149,11 +160,15 @@ def NewGame():
 	root.mainloop()
 
 def main():
+
 	
 
 	#load words
-	global words
-	global root
+	global words,root,client,wordApi
+
+	client = swagger.ApiClient(apiKey, apiUrl)
+	wordApi = WordApi.WordApi(client)	
+
 	words = open('dictionary.txt').read().splitlines()
 
 	root = Tk()

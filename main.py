@@ -6,7 +6,7 @@ from wordnik import *
 
 #api stuff for wordnik
 apiUrl = 'http://api.wordnik.com/v4'
-apiKey = '1024c7f51c4e5c12f230908f5cd087f83ebc58899eba5af45'
+apiKey = 'your API here' #get it here http://developer.wordnik.com/
 client = None
 wordApi = None
 
